@@ -1,35 +1,35 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import type {ReactNode} from 'react'
+import { CivicAuthProvider } from "@civic/auth-web3/react";
 import './App.css'
 
-function App() {
-  const [count, setCount] = useState(0)
+interface AppProps {
+  children: ReactNode
+}
+
+function App({children}: AppProps) {
+  const handleSignIn = async (error?: Error) => {
+    if (error) {
+      console.error('Sign in error:', error);
+    } else {
+      console.log('Successfully signed in');
+    }
+  };
+
+  const handleSignOut = async () => {
+    console.log('Successfully signed out');
+  };
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <CivicAuthProvider 
+      clientId='8c82d94c-3a91-44cf-8c84-661529040a50'
+      onSignIn={handleSignIn}
+      onSignOut={handleSignOut}
+      displayMode="redirect"
+      redirectUrl={window.location.origin}
+    >
+      {children}
+    </CivicAuthProvider>
   )
 }
 
-export default App
+export default App;
