@@ -10,6 +10,7 @@ interface WalletContextState {
   isLoading: boolean;
   error: string | null;
   createWallet: () => Promise<void>;
+  connection: Connection
 }
 
 interface SolanaWallet {
@@ -43,6 +44,7 @@ export const useWalletContext = (): WalletContextState => {
 
       if (user && !userHasWallet(userContext)) {
         await userContext.createWallet();
+        
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to create wallet');
@@ -94,6 +96,7 @@ export const useWalletContext = (): WalletContextState => {
     balance,
     isLoading,
     error,
-    createWallet
+    createWallet,
+    connection
   };
 }; 

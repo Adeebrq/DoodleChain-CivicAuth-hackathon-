@@ -2,13 +2,16 @@ import { UserButton, useUser } from "@civic/auth-web3/react";
 import { useEffect, useState } from "react";
 import { useWalletContext } from "../hooks/useWalletContext";
 import { useToaster } from "../hooks/useToaster";
+import { useTheme } from "../hooks/useThemeContext";
 import { ToastContainer } from 'react-toastify';
+import '../styles/theme.css';
 
 const LandingPage = () => {
   const { user, authStatus, error: authError } = useUser();
   const { publicKey, balance, isLoading, error: walletError, createWallet } = useWalletContext();
   const [isPublicKeyLoading, setIsPublicKeyLoading] = useState(false);
   const { handleAuthStatus, handleWalletStatus, handlePublicKeyStatus } = useToaster();
+  const { theme, toggleTheme } = useTheme();
 
   // Handle authentication status
   useEffect(() => {
@@ -48,9 +51,27 @@ const LandingPage = () => {
   }, [user, publicKey, isLoading]);
 
   return (
-    <div style={{ padding: '20px', textAlign: 'center' }}>
-      <ToastContainer />
-      <div style={{ marginTop: '20px' }}>
+    <div 
+      className={`${theme}-mode`}
+      style={{ 
+        padding: '20px', 
+        textAlign: 'center', 
+        minHeight: '100vh',
+        paddingTop: '80px' // Add padding to account for fixed header
+      }}
+    >
+      <ToastContainer theme={theme} />
+      
+      {/* Theme Toggle Button */}
+      <button 
+        onClick={toggleTheme}
+        className="theme-button"
+        style={{ position: 'absolute', top: '20px', right: '20px' }}
+      >
+        {theme === 'light' ? '🌙' : '☀️'}
+      </button>
+
+      <div className="theme-card" style={{ marginTop: '20px' }}>
         {authStatus === 'authenticating' || isLoading || isPublicKeyLoading ? (
           <div>
             <p>Authenticating...</p>
