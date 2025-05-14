@@ -13,6 +13,7 @@
     "@civic/auth": "^0.5.6-mcp-patch.2",
     "@civic/auth-web3": "^0.5.8",
     "@solana/web3.js": "^1.98.2",
+    "firebase": "^11.7.1",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-icons": "^5.5.0",

@@ -5,6 +5,7 @@ import { useToaster } from "../hooks/useToaster";
 import { useTheme } from "../hooks/useThemeContext";
 import { ToastContainer } from 'react-toastify';
 import '../styles/theme.css';
+import { useNavigate } from "react-router-dom";
 
 const LandingPage = () => {
   const { user, authStatus, error: authError } = useUser();
@@ -12,6 +13,7 @@ const LandingPage = () => {
   const [isPublicKeyLoading, setIsPublicKeyLoading] = useState(false);
   const { handleAuthStatus, handleWalletStatus, handlePublicKeyStatus } = useToaster();
   const { theme, toggleTheme } = useTheme();
+  const navigate= useNavigate()
 
   // Handle authentication status
   useEffect(() => {
@@ -57,12 +59,11 @@ const LandingPage = () => {
         padding: '20px', 
         textAlign: 'center', 
         minHeight: '100vh',
-        paddingTop: '80px' // Add padding to account for fixed header
+        paddingTop: '80px' 
       }}
     >
       <ToastContainer theme={theme} />
       
-      {/* Theme Toggle Button */}
       <button 
         onClick={toggleTheme}
         className="theme-button"
@@ -103,6 +104,7 @@ const LandingPage = () => {
           </div>
         )}
       </div>
+      <button onClick={()=> navigate("/canvas")}>Canvas</button>
     </div>
   );
 };
