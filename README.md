@@ -1,6 +1,6 @@
 # DoodleChain – Decentralized Collaborative Drawing dApp
 
-![DoodleChain Demo]() 
+![Demo Image](https://drive.google.com/uc?export=view&id=1RA-CFVkKmrRAIJJKItlI_WrfHhJJAM1u)
 
 ## 🚨 Known issues
 
@@ -23,6 +23,9 @@ DoodleChain is a decentralized collaborative drawing platform built with React, 
 
 - 🖱️ **Hover to Identify Artist**  
   Hovering over a drawing shows the wallet ID or username of the creator.
+  
+![Demo Image 2](https://drive.google.com/uc?export=view&id=1JLydYLPDs0JRHTt7wz8uLhEOyNBwzCNt)
+
 
 ## Tech Stack
 
