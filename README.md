@@ -69,7 +69,7 @@ VITE_FIREBASE_MESSAGING_SENDER_ID=your_firebase_messaging_sender_id
 VITE_FIREBASE_APP_ID=your_firebase_app_id
 REACT_APP_CIVIC_CLIENT_ID=your_civic_client_id
 ```
-🚨 **the firestore configuration requires custom logic implementation which is too big to include here, contact me for the code for this part, else use the live website**
+🚨 **The firestore configuration requires custom logic implementation which is too big to include here, contact me for the code for this part, else use the live website.**
 
 4. **Firestore setup**
 ```
