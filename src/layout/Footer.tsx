@@ -14,7 +14,7 @@ const Footer: React.FC<FooterProps> = ({ className = '' }) => {
       <FooterContent>
         <FooterSection>
           <FooterTitle>DoodleChain</FooterTitle>
-          <FooterText>DoodleChain is a creative playground where anyone can come together to draw & collaborate to visualize the creativity of their collective minds into a single canvas. one stroke at a time.</FooterText>
+          <FooterText>DoodleChain is a creative playground where any can come together to draw & collaborate to visualize the creativity of their collective minds into a single canvas. one stroke at a time.</FooterText>
         </FooterSection>
       </FooterContent>
 

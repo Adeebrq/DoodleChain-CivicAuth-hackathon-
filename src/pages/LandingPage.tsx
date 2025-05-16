@@ -844,7 +844,7 @@ const LandingPage = () => {
             Authentication Required
           </ModalTitle>
           <ModalText $theme={theme as 'light' | 'dark'}>
-            Please log in with anyone of your socials to access the collaborative canvas and start creating!
+            Please log in with any of your socials to access the collaborative canvas and start creating!
           </ModalText>
           <ModalButton onClick={handleSignIn}>
             Log in with CivicAuth
