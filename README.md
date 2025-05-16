@@ -26,6 +26,9 @@ DoodleChain is a decentralized collaborative drawing platform built with React, 
   
 ![Demo Image 2](https://drive.google.com/uc?export=view&id=1JLydYLPDs0JRHTt7wz8uLhEOyNBwzCNt)
 
+## Watch the demo 🎥
+[![Watch the demo](https://drive.google.com/uc?export=view&id=1TaP5YlmdkIgwyOwjfPK4DkjocroLFeJL)](https://youtu.be/NL0EhvVf7qI?si=CNXNyBcOKLNFKBZV)
+
 
 ## Tech Stack
 
