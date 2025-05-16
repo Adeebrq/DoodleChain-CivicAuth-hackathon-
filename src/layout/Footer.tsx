@@ -40,6 +40,7 @@ const Footer: React.FC<FooterProps> = ({ className = '' }) => {
 const FooterContainer = styled.footer<{ theme: 'light' | 'dark' }>`
   width: 100%;
   padding: 2rem 0;
+  margin-top: auto;
   background-color: ${props => 
     props.theme === 'light' ? 'var(--light-secondary)' : 'var(--dark-secondary)'};
   border-top: 1px solid ${props => 
@@ -73,11 +74,11 @@ const FooterText = styled.p`
   opacity: 0.8;
 `;
 
-const FooterLinks = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-`;
+// const FooterLinks = styled.div`
+//   display: flex;
+//   flex-direction: column;
+//   gap: 0.5rem;
+// `;
 
 const FooterLink = styled.a`
   color: inherit;

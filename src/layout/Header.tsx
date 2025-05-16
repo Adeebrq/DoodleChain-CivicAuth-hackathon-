@@ -1,10 +1,13 @@
-import { UserButton } from "@civic/auth-web3/react";
+import { UserButton, useUser } from "@civic/auth-web3/react";
 import { useTheme } from "../hooks/useThemeContext";
 import styled from "styled-components";
 import "../styles/theme.css";
 import { useWalletContext } from "../hooks/useWalletContext";
 import { useToaster } from "../hooks/useToaster";
 import solIcon from "../assets/solicon.svg"
+import { useNavigate } from "react-router-dom";
+import { MoonLoader } from "react-spinners";
+import { useState, useEffect } from "react";
 
 interface HeaderProps {
   className?: string;
@@ -12,10 +15,24 @@ interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = ({ className = '' }) => {
   const { theme, toggleTheme } = useTheme();
-  const {publicKey, balance, connection} = useWalletContext();
-  const {showSuccess, showError} = useToaster();
+  const { publicKey, balance, connection, exportBalance } = useWalletContext();
+  const { showSuccess, showError } = useToaster();
+  const navigate = useNavigate();
+  const { user } = useUser();
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    if (user) {
+      setIsLoading(true);
+      const timer = setTimeout(() => {
+        setIsLoading(false);
+      }, 7000);
+      return () => clearTimeout(timer);
+    }
+  }, [user]);
 
   const Copytext = (text: string) => {
+    if (!text) return;
     navigator.clipboard.writeText(text);
     if(publicKey) {
       showSuccess("Public key copied!")
@@ -34,32 +51,57 @@ const Header: React.FC<HeaderProps> = ({ className = '' }) => {
     return 'Unknown';
   };
 
+  const refresh = () => {
+    exportBalance();
+  }
+
   return (
     <HeaderContainer className={`${theme}-mode ${className}`} theme={theme}>
-      <Logo>
+      <Logo onClick={() => navigate('/')}>
         <h1>DoodleChain</h1>
         <Punchline theme={theme}>A web3 Art Playground</Punchline>
       </Logo>
       
       <RightSection>
-        <ButtonContainer theme={theme}>
-          <UserButton 
-            className="login-button" 
-            dropdownButtonClassName="internal-button" 
-          />
-        </ButtonContainer>
-        <WalletStatus theme={theme}>
-          <WalletItem onClick={() => Copytext(publicKey as string)}>
-            {publicKey?.slice(0,5)}...
-          </WalletItem>
-          <WalletItem>
-            <SolanaIcon src={solIcon} alt="SOL" />
-            {balance?.toFixed(2) ?? '0.00'}
-          </WalletItem>
-          <NetworkBadge theme={theme}>
-            {getConnectionName()}
-          </NetworkBadge>
-        </WalletStatus>
+        {isLoading ? (
+          <LoaderContainer>
+            <MoonLoader
+              size={30}
+              color={theme === 'light' ? 'var(--light-primary)' : 'var(--dark-primary)'}
+            />
+          </LoaderContainer>
+        ) : user ? (
+          <>
+            <ButtonContainer theme={theme}>
+              <UserButton 
+                className="login-button" 
+                dropdownButtonClassName="internal-button" 
+              />
+            </ButtonContainer>
+            <WalletStatus theme={theme}>
+              <WalletItem onClick={() => Copytext(publicKey as string)}>
+                {publicKey?.slice(0,5)}...
+              </WalletItem>
+              <WalletItem>
+                <SolanaIcon src={solIcon} alt="SOL" />
+                {balance?.toFixed(2) ?? '0.00'}
+              </WalletItem>
+              <NetworkBadge theme={theme}>
+                {getConnectionName()}
+              </NetworkBadge>
+              <RefreshButton onClick={refresh} theme={theme}>
+                🔁
+              </RefreshButton>
+            </WalletStatus>
+          </>
+        ) : (
+          <ButtonContainer theme={theme}>
+            <UserButton 
+              className="login-button" 
+              dropdownButtonClassName="internal-button" 
+            />
+          </ButtonContainer>
+        )}
         <ThemeToggle 
           onClick={toggleTheme}
           role="button"
@@ -131,6 +173,22 @@ const ButtonContainer = styled.div<{ theme: 'light' | 'dark' }>`
   }
 `;
 
+const RefreshButton = styled.div<{ theme: 'light' | 'dark' }>`
+  cursor: pointer;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+  }
+`;
+
 const WalletStatus = styled.div<{ theme: 'light' | 'dark' }>`
   display: flex;
   align-items: center;
@@ -181,6 +239,7 @@ const Logo = styled.div`
     margin: 0;
     font-size: 1.5rem;
   }
+  cursor: pointer;
 `;
 
 const RightSection = styled.div`
@@ -212,6 +271,13 @@ const ToggleSwitch = styled.div<{ theme: 'light' | 'dark' }>`
   justify-content: center;
   transition: left 0.3s ease, background-color 0.3s ease;
   font-size: 14px;
+`;
+
+const LoaderContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 1rem;
 `;
 
 export default Header;

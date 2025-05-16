@@ -10,7 +10,8 @@ interface WalletContextState {
   isLoading: boolean;
   error: string | null;
   createWallet: () => Promise<void>;
-  connection: Connection
+  connection: Connection;
+  exportBalance: () => Promise<string>;
 }
 
 interface SolanaWallet {
@@ -44,7 +45,6 @@ export const useWalletContext = (): WalletContextState => {
 
       if (user && !userHasWallet(userContext)) {
         await userContext.createWallet();
-        
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to create wallet');
@@ -55,14 +55,48 @@ export const useWalletContext = (): WalletContextState => {
   };
 
   // Function to fetch balance
-  const fetchBalance = async (pubKey: PublicKey) => {
+  const fetchBalance = async () => {
     try {
-      const walletBalance = await connection.getBalance(pubKey);
-      setBalance(walletBalance / 1e9); // Convert lamports to SOL
+      setIsLoading(true);
+      setError(null);
+
+      if (user && userHasWallet(userContext)) {
+        const walletContext = userContext as unknown as SolanaWallet;
+        if (walletContext.solana?.wallet?.publicKey) {
+          const pubKey = walletContext.solana.wallet.publicKey;
+          setPublicKey(pubKey.toString());
+          const walletBalance = await connection.getBalance(pubKey);
+          setBalance(walletBalance / 1e9); // Convert lamports to SOL
+        }
+      } else {
+        setError('No wallet available');
+      }
     } catch (err) {
       console.error('Error fetching balance:', err);
       setError(err instanceof Error ? err.message : 'Failed to fetch balance');
+    } finally {
+      setIsLoading(false);
     }
+  };
+
+  // Function to export balance data
+  const exportBalance = async (): Promise<string> => {
+    await fetchBalance(); // Ensure we have the latest balance
+    
+    const timestamp = new Date().toISOString();
+    const balanceData = {
+      publicKey: publicKey || 'No wallet connected',
+      balance: balance !== null ? balance : 0,
+      timestamp,
+      network: SOLANA_RPC_ENDPOINT.includes('devnet') ? 'Devnet' : 'Mainnet'
+    };
+    
+    // Convert to CSV format
+    const csvHeader = 'Public Key,Balance (SOL),Timestamp,Network\n';
+    const csvRow = `"${balanceData.publicKey}",${balanceData.balance},"${balanceData.timestamp}","${balanceData.network}"`;
+    const csvContent = csvHeader + csvRow;
+    
+    return csvContent;
   };
 
   // Effect to handle wallet state updates
@@ -77,7 +111,8 @@ export const useWalletContext = (): WalletContextState => {
           if (walletContext.solana?.wallet?.publicKey) {
             const pubKey = walletContext.solana.wallet.publicKey;
             setPublicKey(pubKey.toString());
-            await fetchBalance(pubKey);
+            const walletBalance = await connection.getBalance(pubKey);
+            setBalance(walletBalance / 1e9); // Convert lamports to SOL
           }
         }
       } catch (err) {
@@ -97,6 +132,7 @@ export const useWalletContext = (): WalletContextState => {
     isLoading,
     error,
     createWallet,
-    connection
+    connection,
+    exportBalance
   };
-}; 
+};
